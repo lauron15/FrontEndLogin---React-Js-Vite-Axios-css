@@ -1,22 +1,48 @@
 import { FaUser, FaLock} from "react-icons/fa"; //vai importar ambos simbolos do usuario e simbolo do cadeado.
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Login.css";
+import React from "react";
+import {Link} from "react-router-dom";
 
 const Login = () => {
 
     const[username,setUsername] = useState("");
     const[password, setPassword] = useState("");
+    const[redirect, setRedirect] = useState(false)
 
-    const handleSubit = (event) =>
-        {
-            event.preventDefault();
-            console.log("Envio");
 
-            alert("Enviando os dados:" + username + " " + password);
+    // ~fiz a função criar um objeto de user com os nomes igual eu tenho no backend e fiz um fetch para a minha rota de loguin
+    // Essa função antes do return, é a responsável para criar a requisição da API do front para o back end. Essa const vai habilitar a integração com usuario e senha. 
+    const handleSubit = (event) => {
+          var user = {
+            Nome: username,
+            Senha: password
+          }
+          fetch("http://localhost:5173/Login", {
+            method: 'POST', // Método HTTP
+            headers: {
+                'Content-Type': 'application/json', // Tipo de conteúdo
+            },
+            body: JSON.stringify(user) // Convertendo os dados para uma string JSON
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            window.alert(data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            window.alert(error);
+        });
     };
 
   return (
+    <div className='App'>
     <div className='container'>
       <form onSubmit={handleSubit}>
         <h1>Acesse o sistema</h1>
@@ -28,7 +54,7 @@ const Login = () => {
         <div className="input-field">
         <input type='Password' placeholder='Password'
         required
-         onChange={(e) => setPassword(e.target.value)}/>
+        onChange={(e) => setPassword(e.target.value)}/>
         <FaLock className="icon"/>
         </div>
 
@@ -42,15 +68,18 @@ const Login = () => {
         <button>Entrar</button>
         <div className="sigup-link">
             <p>Não tem uma conta? 
-                <a href="#">Registrar</a>
+            <Link to="/Cadastro"> Registrar</Link>
             </p>
         </div>
       </form>
     </div>
+        </div>
   )
 }
 
 export default Login
+
+//   **** <Link to="/src/Cadastro/Cadastro.jsx">Ir para o Login</Link> está dando problema *****
 
 //rafce (cria um componente do react)
 // trabalhamos com o html em conjunto com o javascript o tempo inteiro

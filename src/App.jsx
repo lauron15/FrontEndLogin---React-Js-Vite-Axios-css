@@ -1,15 +1,18 @@
 
 import './App.css'
-import Login from './Components/Login/Login'
+// import {Route, BrowserRouter, Routes } from "react-router-dom";
+import React from 'react';
+import Login from './Components/Login/Login';
+import Rotas from './Rotas';
 
 function App() {
   
-
   return (
-    <div className='App'>
-      <Login/>
-    </div>
+<Rotas/>
   )
 }
 
 export default App
+
+
+
